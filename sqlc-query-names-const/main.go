@@ -45,8 +45,9 @@ func generateGoCode(queryNames []string) string {
 	var builder strings.Builder
 	builder.WriteString(fmt.Sprintf("package %s\n\n", packageName))
 	builder.WriteString("// Query names as constants\nconst (\n")
+	constantPrefix = strings.ToUpper(constantPrefix)
 	for _, name := range queryNames {
-		builder.WriteString(fmt.Sprintf("    %s = \"%s\"\n", name, name))
+		builder.WriteString(fmt.Sprintf("    %s%s = \"%s\"\n", constantPrefix, name, name))
 	}
 	builder.WriteString(")\n")
 	return builder.String()
@@ -58,9 +59,10 @@ func writeGoCodeToFile(code, fileName string) error {
 }
 
 var (
-	inputFile   string
-	outputFile  string
-	packageName string
+	inputFile      string
+	outputFile     string
+	packageName    string
+	constantPrefix string
 )
 var rootCmd = &cobra.Command{
 	Use:   "sqlc-query-names-const",
@@ -94,6 +96,7 @@ func init() {
 	rootCmd.Flags().StringVarP(&outputFile, "output", "o", "", "output file name e.g. querynames.go")
 	rootCmd.MarkFlagRequired("input")
 	rootCmd.Flags().StringVarP(&packageName, "package", "p", "main", "package name for the generated Go file")
+	rootCmd.Flags().StringVarP(&constantPrefix, "prefix", "c", "SQL", "prefix for the generated constants")
 }
 
 func main() {
