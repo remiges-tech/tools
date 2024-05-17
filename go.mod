@@ -1,4 +1,4 @@
-module github.com/remites-tech/tools
+module github.com/remiges-tech/tools
 
 go 1.21.6
 
